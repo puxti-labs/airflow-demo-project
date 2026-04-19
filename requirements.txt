@@ -1,0 +1,14 @@
+# Airflow core — pin to a specific version in production
+apache-airflow==2.9.1
+
+# Airflow providers
+apache-airflow-providers-google==10.17.0       # BigQueryHook, GCS operators
+apache-airflow-providers-http==4.10.1          # HttpHook (used for Salesforce REST API)
+
+# Salesforce — used directly in billing_sync for the Stripe client pattern;
+# for production Salesforce, consider the official Airflow Salesforce provider
+# or simple-salesforce:
+simple-salesforce==1.12.5
+
+# Stripe billing API
+stripe==8.11.0
