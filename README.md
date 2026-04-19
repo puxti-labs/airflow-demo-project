@@ -1,5 +1,9 @@
 # Clariva Airflow — Data Extraction Pipeline
 
+```bash
+git clone https://github.com/puxti-labs/airflow-demo-project
+```
+
 Upstream extraction DAGs for [puxti-demo-project](https://github.com/puxti-labs/puxti-demo-project).
 
 These DAGs extract raw data from Clariva's operational systems and land it in BigQuery's `raw` schema — the tables that dbt's staging models read from.
@@ -142,4 +146,42 @@ airflow-demo-project/
 ├── requirements.txt
 ├── .env.example
 └── README.md
+```
+
+---
+
+## Workspace config (`.puxti.yml`)
+
+Clone both repos alongside each other and place a `.puxti.yml` one level above:
+
+```
+workspace/
+├── .puxti.yml
+├── puxti-demo-project/    ← git clone https://github.com/puxti-labs/puxti-demo-project
+└── airflow-demo-project/  ← git clone https://github.com/puxti-labs/airflow-demo-project
+```
+
+```yaml
+version: 1
+
+connectors:
+  dbt:
+    project_dir: ./puxti-demo-project
+    repo: puxti-labs/puxti-demo-project
+    base_branch: main
+
+  airflow:
+    project_dir: ./airflow-demo-project
+    repo: puxti-labs/airflow-demo-project
+    dags_dir: dags/
+    base_branch: main
+```
+
+With this in place, run `puxti link` to declare the cross-system edges:
+
+```bash
+puxti link --from task.airflow.salesforce_sync.extract_opportunities --to source.clariva.raw_opportunities --description "Extracts Salesforce opportunities. amount is a roll-up of OpportunityLineItem.TotalPrice post Q1 2024 migration."
+puxti link --from task.airflow.salesforce_sync.extract_accounts --to source.clariva.raw_accounts --description "Extracts Salesforce Account records. arr maps from Salesforce AnnualRevenue."
+puxti link --from task.airflow.salesforce_sync.extract_order_lines --to source.clariva.raw_order_lines --description "Extracts OpportunityLineItems. One row per product per deal. This table was empty before Q1 2024."
+puxti link --from task.airflow.billing_sync.extract_subscriptions --to source.clariva.raw_subscriptions --description "Extracts Stripe subscriptions. mrr is normalised to monthly from plan amount and interval."
 ```
