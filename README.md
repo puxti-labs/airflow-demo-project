@@ -115,16 +115,10 @@ git clone https://github.com/puxti-labs/airflow-demo-project
 **2. Install Puxti**
 
 ```bash
-pip install puxti==0.6.0
+pip install puxti==0.7.0
 ```
 
-**3. Start Neo4j** (from puxti-demo-project, which includes `docker-compose.yml`)
-
-```bash
-cd puxti-demo-project && docker compose up -d && cd ..
-```
-
-**4. Set up Airflow**
+**3. Set up Airflow**
 
 ```bash
 cd airflow-demo-project
@@ -144,20 +138,20 @@ airflow connections add google_cloud_default \
   --conn-extra '{"project": "clariva-data-prod", "keyfile_path": "/path/to/sa.json"}'
 ```
 
-**5. Set environment variables for Puxti**
+**4. Set environment variables for Puxti**
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 export GITHUB_TOKEN=ghp_...    # needed if you want Puxti to open real PRs
 ```
 
-**6. Place `.puxti.yml` at the workspace root** (see Workspace config below)
+**5. Place `.puxti.yml` at the workspace root** (see Workspace config below)
 
-**7. Verify Puxti is configured**
+**6. Verify Puxti is configured**
 
 ```bash
 puxti config    # shows resolved env vars and .puxti.yml location
-puxti health    # checks Neo4j, Anthropic key, dbt manifest, GitHub token
+puxti health    # checks Knowledge Graph, Anthropic key, dbt manifest, GitHub token
 ```
 
 ---
